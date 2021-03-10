@@ -13,12 +13,12 @@ Hijack_ColoredEggs: @ hook at 0x7614A (may need one for 0x76496?). nop out 0x761
   ldr r4, =0x02074571
   blx r4
 
-  @ write file id??
-  mov r1, #0x75
+  @ write file id for most likely case (egg_data.narc)
+  mov r1, #0x76
   strh r1, [r5, #0]
 
   @ set up palette narc ID, index by species ID
-  ldr r1, =253
+  mov r1, #11
   add r2, r0, r1
 
   @@@@
@@ -36,11 +36,15 @@ Hijack_ColoredEggs: @ hook at 0x7614A (may need one for 0x76496?). nop out 0x761
   .normal:
 
   @ load image narc id (egg)
-  mov r1, #0x84
+  mov r1, #11
 
   b .end
 
   .manaphy:
+
+  @ write file id containing manaphy (pl_otherpoke.narc)
+  mov r1, #0x75
+  strh r1, [r5, #0]
 
   @ load image narc id (manaphy egg)
   mov r1, #0x85
@@ -53,7 +57,7 @@ Hijack_ColoredEggs: @ hook at 0x7614A (may need one for 0x76496?). nop out 0x761
   .togepi:
 
   @ load image narc id (togepi egg)
-  mov r1, #0xFD
+  ldr r1, =747
 
   .end:
 

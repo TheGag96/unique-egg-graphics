@@ -50,7 +50,7 @@ function patch_code {
 
 patch_code Hijack_PkmnPtrSave 50550
 patch_code Hijack_ColoredEggs 50570
-patch_code Hijack_Hatching    505C0
+patch_code Hijack_Hatching    505E0
 
 # hijack GetPkmnData to jump to Hijack_PkmnPtrSave.s
 ./makebl 74476 50550 | ./binpatch $patched_arm9bin 74476
@@ -61,6 +61,6 @@ patch_code Hijack_Hatching    505C0
 echo C046 C046 C046 C046 C046 | ./binpatch $patched_arm9bin 7614E # nop out replaced code
 
 # hijack egg hatch animation code to jump to Hijack_Hatching.s
-./makebl 021D151E 505C0 | ./binpatch $patched_overlay119bin 79E
+./makebl 021D151E 505E0 | ./binpatch $patched_overlay119bin 79E
 
 rm temp_bin

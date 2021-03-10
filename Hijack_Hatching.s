@@ -34,7 +34,7 @@ Hijack_Hatching: @ hook at overlay 119, 0x79E (0x021D151E)
   .togepi:
 
   @ load image narc id (togepi egg)
-  mov r0, #11
+  ldr r0, =748
 
   .end:
 
