@@ -29,6 +29,7 @@ function compile_asm {
 compile_asm Hijack_PkmnPtrSave.s
 compile_asm Hijack_ColoredEggs.s
 compile_asm Hijack_Hatching.s
+compile_asm Hijack_SpecialPokemon.s
 
 # compile binary patch tool and hijack branch maker tools
 dmd binpatch.d
@@ -48,9 +49,10 @@ function patch_code {
   od -An -t x1 temp_bin | ./binpatch $patched_arm9bin $2
 }
 
-patch_code Hijack_PkmnPtrSave 50550
-patch_code Hijack_ColoredEggs 50570
-patch_code Hijack_Hatching    505E0
+patch_code Hijack_PkmnPtrSave    50550
+patch_code Hijack_ColoredEggs    50570
+patch_code Hijack_Hatching       505E0
+patch_code Hijack_SpecialPokemon 50680
 
 # hijack GetPkmnData to jump to Hijack_PkmnPtrSave.s
 ./makebl 74476 50550 | ./binpatch $patched_arm9bin 74476
