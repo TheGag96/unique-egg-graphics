@@ -24,23 +24,24 @@ Hijack_ColoredEggs: @ hook at 0x7614A (may need one for 0x76496?). nop out 0x761
   add r2, r0, r1
   sub r2, #1
 
-  @@@@
-  @ species-specific special cases
-  @@@@
-
+  @ manaphy is VERY special and can just load from where it normally is
+  @ (pl_otherpoke.narc)
   ldr r1, =490  @ manaphy
   cmp r0, r1
   beq .manaphy
 
+  @ begin searching in species-specific special cases list
   ldr r1, =SPECIAL_POKEMON_TABLE
   mov r4, #0
 
   .special_pokemon_loop_start:
 
+  @ jump out if end of table found
   ldrh r3, [r1]
   cmp r3, #0
   beq .normal
 
+  @ jump out if pokemon has a custom graphic
   cmp r0, r3
   beq .special
 

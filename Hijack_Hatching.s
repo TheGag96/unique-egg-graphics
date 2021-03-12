@@ -20,19 +20,18 @@ Hijack_Hatching: @ hook at overlay 119, 0x79E (0x021D151E)
   add r1, #FIRST_CUSTOM_EGG_PALETTE
   sub r1, #1
 
-  @@@@
-  @ species-specific special cases
-  @@@@
-
+  @ begin searching in species-specific special cases list
   ldr r2, =SPECIAL_POKEMON_TABLE
   mov r4, #0
 
   .special_pokemon_loop_start:
 
+  @ jump out if end of table found
   ldrh r3, [r2]
   cmp r3, #0
   beq .normal
 
+  @ jump out if pokemon has a custom graphic
   cmp r0, r3
   beq .special
 

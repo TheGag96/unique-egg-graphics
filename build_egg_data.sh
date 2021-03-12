@@ -27,12 +27,13 @@ done
 
 # must match order in Hijack_SpecialPokemon.s
 special_pokemon=(
+  igglybuff
   togepi
 )
 
 # copy pokemon graphics into proper narc locations
 counter=$FIRST_CUSTOM_EGG_GRAPHIC
-for pokemon in $special_pokemon
+for pokemon in ${special_pokemon[@]}
 do
   cp ../egg_data/gfx/$pokemon.sprite.ncgr  "extracted/$extracted_folder_eggdata/$(($counter)).ncgr"
   cp ../egg_data/gfx/$pokemon.hatching.bin "extracted/$extracted_folder_eggdata/$(($counter+1)).bin"
