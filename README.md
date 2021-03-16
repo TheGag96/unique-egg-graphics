@@ -68,3 +68,11 @@ A rundown of the code files involved:
 * `Hijack_Hatching.s` - Hijacks a function in [overlay 119](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/Misc/119_EggHatch.c#L495), that loads the egg hatching animation spritesheet from `demo/egg/data/egg_data.narc`. It largely does the same stuff as `Hijack_ColoredEggs.s`. Though, no special case is needed for Manaphy, as this code is not reached when it's hatching.
 
 * `Hijack_SpecialPokemon.s` - Table of species that have their own GFX. Each entry is two bytes. The order matters, and must match the `special_pokemon` list in `build_egg_data.sh`. The table must end with a `0`.
+
+
+## Credits
+
+* [turtleisaac](https://github.com/turtleisaac) - Idea
+* [QuakenPixels](https://www.pixilart.com/art/togepi-egg-101eabef8c91952) - Togepi egg sprite
+* [DescendedFromUllr](https://www.deviantart.com/descendedfromullr/art/174-Igglybuff-Egg-Pokemon-Essentials-774854910) - Igglybuff egg sprite
+* [LJSTAR](https://twitter.com/LJSTAR_) - Some spriting help
