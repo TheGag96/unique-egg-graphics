@@ -11,11 +11,12 @@ If you would like to use this in your own hacks, please feel free to do so!
 
 1. Install [devkitARM](https://devkitpro.org/wiki/Getting_Started).
 2. Install a [D compiler](https://dlang.org/download.html).
-3. Use a program like Nitro Explorer 3 to extract `arm9.bin`, `overlay9-119.bin`, and `demo/egg/data/egg_data.narc` from your Platinum ROM.
-4. Place them in the root folder of this repo, and name them to `arm9_vanilla.bin`, `overlay119_vanilla.bin`, and `egg_data_vanilla.narc` respectively.
-5. Run `./build_egg_data.sh`.
-6. Run `./build.sh`.
-7. Inject `arm9_patched.bin`, `overlay119_patched.bin`, `egg_data_patched.bin`, and `overlay87_patched.bin` back into `arm9.bin`, `overlay9-119.bin`, and `demo/egg/data/egg_data.narc`, respectively.
+3. Download [PokeEditor](https://github.com/turtleisaac/PokEditor/releases), extract it into the root folder of this repo, and rename folder that got extracted to `PokEditor`.
+4. Use a program like Nitro Explorer 3 to extract `arm9.bin`, `overlay9-119.bin`, and `demo/egg/data/egg_data.narc` from your Platinum ROM.
+5. Place them in the root folder of this repo, and name them to `arm9_vanilla.bin`, `overlay119_vanilla.bin`, and `egg_data_vanilla.narc` respectively.
+6. Run `./build_egg_data.sh`.
+7. Run `./build.sh`.
+8. Inject `arm9_patched.bin`, `overlay119_patched.bin`, `egg_data_patched.bin`, and `overlay87_patched.bin` back into `arm9.bin`, `overlay9-119.bin`, and `demo/egg/data/egg_data.narc`, respectively.
 
 
 ## Adding New Palettes
