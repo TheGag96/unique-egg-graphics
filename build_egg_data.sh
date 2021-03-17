@@ -2,8 +2,8 @@
 
 set -e
 
-original_eggdata=egg_data_vanilla.narc
-patched_eggdata=egg_data_patched.narc
+original_eggdata=egg_data_hg_vanilla.narc
+patched_eggdata=egg_data_hg_patched.narc
 
 cd PokEditor # PokeEditor doesn't work unless you run it from its containing directory
 

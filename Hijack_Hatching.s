@@ -2,7 +2,7 @@
 
 .include "Hijack_Include.s"
 
-Hijack_Hatching: @ hook at overlay 119, 0x79E (0x021D151E)
+Hijack_Hatching: @ hook at overlay 95, 0x602 (0x021E5F02)
   push {lr}
   push {r2-r4}
 
@@ -12,7 +12,7 @@ Hijack_Hatching: @ hook at overlay 119, 0x79E (0x021D151E)
   @ call GetBoxPkmnData to get the actual species ID of the Pokemon
   mov r1, #5
   mov r2, #0
-  ldr r4, =0x02074571
+  ldr r4, =0x0206E641
   blx r4
 
   @ set up palette narc ID, index by species ID

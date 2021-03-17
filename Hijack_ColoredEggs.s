@@ -2,7 +2,7 @@
 
 .include "Hijack_Include.s"
 
-Hijack_ColoredEggs: @ hook at 0x7614A (may need one for 0x76496?). nop out 0x7614E-0x76156
+Hijack_ColoredEggs: @ hook at 0x70384. nop out 0x70388-0x70390
   push {lr}
   push {r0, r1, r2, r3, r4}
 
@@ -12,11 +12,11 @@ Hijack_ColoredEggs: @ hook at 0x7614A (may need one for 0x76496?). nop out 0x761
   @ call GetBoxPkmnData to get the actual species ID of the Pokemon
   mov r1, #5
   mov r2, #0
-  ldr r4, =0x02074571
+  ldr r4, =0x0206E641
   blx r4
 
-  @ write file id for most likely case (egg_data.narc)
-  mov r1, #0x76
+  @ write file id for most likely case (egg_data.narc / a/1/1/5)
+  mov r1, #0x73
   strh r1, [r5, #0]
 
   @ set up palette narc ID, index by species ID
@@ -65,7 +65,7 @@ Hijack_ColoredEggs: @ hook at 0x7614A (may need one for 0x76496?). nop out 0x761
   .manaphy:
 
   @ write file id containing manaphy (pl_otherpoke.narc)
-  mov r1, #0x75
+  mov r1, #0x72
   strh r1, [r5, #0]
 
   @ load image narc id (manaphy egg)

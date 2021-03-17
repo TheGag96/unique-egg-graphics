@@ -11,12 +11,18 @@ If you would like to use this in your own hacks, please feel free to do so!
 
 1. Install [devkitARM](https://devkitpro.org/wiki/Getting_Started).
 2. Install a [D compiler](https://dlang.org/download.html).
-3. Download [PokeEditor](https://github.com/turtleisaac/PokEditor/releases), extract it into the root folder of this repo, and rename folder that got extracted to `PokEditor`.
-4. Use a program like Nitro Explorer 3 to extract `arm9.bin`, `overlay9-119.bin`, and `demo/egg/data/egg_data.narc` from your Platinum ROM.
-5. Place them in the root folder of this repo, and name them to `arm9_vanilla.bin`, `overlay119_vanilla.bin`, and `egg_data_vanilla.narc` respectively.
-6. Run `./build_egg_data.sh`.
-7. Run `./build.sh`.
-8. Inject `arm9_patched.bin`, `overlay119_patched.bin`, `egg_data_patched.bin`, and `overlay87_patched.bin` back into `arm9.bin`, `overlay9-119.bin`, and `demo/egg/data/egg_data.narc`, respectively.
+3. Download NSMB Editor. Because the latest version (as of 379) is broken with regard to decompressing overlays, I recommend [this custom version](https://nsmbhd.net/post/53582/) from MeroMero. An [older version](https://nsmbhd.net/download/353/) may work also. For Windows users, [CrystalTile2](https://www.romhacking.net/utilities/818/) may also work.
+4. Download [PokeEditor](https://github.com/turtleisaac/PokEditor/releases), extract it into the root folder of this repo, and rename folder that got extracted to `PokEditor`.
+5. Open up your ROM in NSMBe (ignoring the error that comes up on load when using MeroMero's build).
+6. Under "Tools/Options", select "Decompress ARM9 binary".
+7. Under "ROM File Browser", select `arm9.bin`, click "Extract", and save as `arm9_hg_vanilla.bin` in the root folder of this repo.
+8. In the `overlay9` folder, select `overlay9_95.bin`, click "Decompress overlay", click "Extract", and save as `overlay95_hg_vanilla.bin`.
+9. In the `root/a/0/2` folder, extract file `8` as `custom_overlay_hg_vanilla.narc`.
+10. In the `root/a/1/1` folder, extract file `5` as `egg_data_hg_vanilla.narc`.
+11. On the command line, run `./build.sh`, then `./build_egg_data.sh`.
+12. In NSMBe, reinsert `arm9_hg_patched.bin`, and and `overlay95_hg_patched.bin` back into `arm9.bin` and `overlay9_95.bin`, respectively. For `arm9.bin`, you may need to hit "Decompress ARM9 Binary" to correctly insert it (not sure).
+13. Reinsert `custom_overlay_hg.narc` into `root/a/0/2/8`.
+14. Reinsert `egg_data_hg_patched.narc` into `root/a/1/1/5`.
 
 
 ## Adding New Palettes
@@ -27,8 +33,6 @@ Simply replace the `.nclr` file in `egg_data/pals` corresponding to the species 
 ## Adding New Graphics
 
 * Add the species ID to the table defined in `Hijack_SpecialPokemon.s`. 
-
-  - (**Note: The address of this table is near the limit of the unused space found for inserting this mod. Too many may overflow into data actually used by the game.** This mod thus needs to be reworked in the future to run off a synthetic overlay so that this won't occur.)
 
 * Add the name of the species into the table called `special_pokemon` in `build_egg_data.sh`. An entry such as `togepi`should correspond with two files in `egg_data/gfx/` named `togepi.sprite.ncgr` and `togepi.hatching.bin`.
 
@@ -41,7 +45,7 @@ Simply replace the `.nclr` file in `egg_data/pals` corresponding to the species 
 
 ## How It Works
 
-We basically shove a bunch of new stuff into `demo/egg/data/egg_data.narc` and change some code to load it!
+We basically shove a bunch of new stuff into `a/1/1/5` (`demo/egg/data/egg_data.narc` in Platinum) and change some code to load it!
 
 The new subfiles that are added to the NARC:
 
@@ -61,11 +65,11 @@ A rundown of the code files involved:
 
 * `Hijack_Include.s` - Just some common constants to be included by all other files.
 
-* `Hijack_PkmnPtrSave.s` - * This code is jumped to from hijacks in both [GetPkmnData](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/pokemon_data.c#L517) and [GetBoxPkmnData](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/pokemon_data.c#L612). It just grabs the pointer to the Pokémon data structure passed into these function calls and puts it at `0x020501DC` to be used later by `Hijack_ColoredEggs.s` and `Hijack_Hatching.s`.
+* `Hijack_PkmnPtrSave.s` - * This code is jumped to from hijacks in both GetPkmnData and GetBoxPkmnData (Platinum equivalent [1](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/pokemon_data.c#L517) and [2](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/pokemon_data.c#L612)). It just grabs the pointer to the Pokémon data structure passed into these function calls and puts it at `0x023C9000` to be used later by `Hijack_ColoredEggs.s` and `Hijack_Hatching.s`.
 
-* `Hijack_ColoredEggs.s` - Hijacks in the [code arbitrating](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/pokemon_data.c#L2985-L2989) what graphic and palette to use for drawing a Pokémon's sprite, specifically in the case for `494` (ID for a Pokémon egg). It uses the pointer to the last read Pokémon data structure at `0x020501DC` in order to call `GetBoxPkmnData` to find out what Pokémon is inside the egg. The NARC file ID changed to the one for `demo/egg/data/egg_data.narc` (`0x76`). The palette chosen is indexed by species ID from a big block of palette subfiles, starting at subfile 12. The graphic subfile ID is chosen by searching through a table defined in `Hijack_SpecialPokemon.s`, looking for the species ID. If it's found, the position it was found in the list is used as an index into the narc (past all of the palettes) . For Manaphy specifically, instead of doing all of that, we just let it load from its usual location. Code from `0x7614E` to `0x76156` is replaced with NOPs since its functionality is replaced.
+* `Hijack_ColoredEggs.s` - Hijacks in the code arbitrating ([Platinum equivalent](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/pokemon_data.c#L2985-L2989)) what graphic and palette to use for drawing a Pokémon's sprite, specifically in the case for `494` (ID for a Pokémon egg). It uses the pointer to the last read Pokémon data structure at `0x023C9000` in order to call `GetBoxPkmnData` to find out what Pokémon is inside the egg. The NARC file ID changed to the one for `a/1/1/5` (`0x73`). The palette chosen is indexed by species ID from a big block of palette subfiles, starting at subfile 12. The graphic subfile ID is chosen by searching through a table defined in `Hijack_SpecialPokemon.s`, looking for the species ID. If it's found, the position it was found in the list is used as an index into the narc (past all of the palettes) . For Manaphy specifically, instead of doing all of that, we just let it load from its usual location. Code from `0x70388` to `0x70390` is replaced with NOPs since its functionality is replaced.
 
-* `Hijack_Hatching.s` - Hijacks a function in [overlay 119](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/Misc/119_EggHatch.c#L495), that loads the egg hatching animation spritesheet from `demo/egg/data/egg_data.narc`. It largely does the same stuff as `Hijack_ColoredEggs.s`. Though, no special case is needed for Manaphy, as this code is not reached when it's hatching.
+* `Hijack_Hatching.s` - Hijacks a function in overlay 95 ([Platinum equivalent](https://github.com/KernelEquinox/PokePlatinum/blob/d4ceb51ccbd9dadd4578afac084d207b3a2a244a/Misc/95_EggHatch.c#L495)), that loads the egg hatching animation spritesheet from `a/1/1/5`. It largely does the same stuff as `Hijack_ColoredEggs.s`. Though, no special case is needed for Manaphy, as this code is not reached when it's hatching.
 
 * `Hijack_SpecialPokemon.s` - Table of species that have their own GFX. Each entry is two bytes. The order matters, and must match the `special_pokemon` list in `build_egg_data.sh`. The table must end with a `0`.
 
@@ -76,3 +80,4 @@ A rundown of the code files involved:
 * [QuakenPixels](https://www.pixilart.com/art/togepi-egg-101eabef8c91952) - Togepi egg sprite
 * [DescendedFromUllr](https://www.deviantart.com/descendedfromullr/art/174-Igglybuff-Egg-Pokemon-Essentials-774854910) - Igglybuff egg sprite
 * [LJSTAR](https://twitter.com/LJSTAR_) - Some spriting help
+* [Mikelan98, Nomura](https://pokehacking.com/r/20041000) - ARM9 Expansion Subroutine
