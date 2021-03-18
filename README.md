@@ -1,4 +1,4 @@
-# Unique Egg Graphics for Pokémon Platinum
+# Unique Egg Graphics for Pokémon HeartGold
 
 This mod allows eggs to have a palette swap or custom sprites based on Pokémon species. The way things are set up currently, every species has a custom palette assigned to it, but a table defines species that get a custom graphic as well.
 
@@ -45,7 +45,7 @@ Simply replace the `.nclr` file in `egg_data/pals` corresponding to the species 
 
 ## How It Works
 
-We basically shove a bunch of new stuff into `a/1/1/5` (`demo/egg/data/egg_data.narc` in Platinum) and change some code to load it!
+We basically shove a bunch of new stuff into `a/1/1/5` (`demo/egg/data/egg_data.narc` in HeartGold) and change some code to load it!
 
 The new subfiles that are added to the NARC:
 
